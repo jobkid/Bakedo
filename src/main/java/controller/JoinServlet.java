@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.*;
+import beans.Member;
+import DAO.MemberDao;
 
 /**
  * Servlet implementation class joinServlet
@@ -32,7 +34,27 @@ public class JoinServlet extends HttpServlet {
 		String email=request.getParameter("email");
 		String phone=request.getParameter("phone");
 		String admin=request.getParameter("admin");
-		System.out.println(name+", "+userid+", "+pwd+", "+email);
+		
+		Member m=new Member();
+		m.setName(name);
+		m.setUserid(userid);
+		m.setPwd(pwd);
+		m.setEmail(email);
+		m.setPhone(phone);
+		m.setAdmin(admin);
+		
+		MemberDao mDao=MemberDao.getInstance();
+		int result = mDao.insertMember(m);
+		
+		HttpSession session = request.getSession();
+		if(result==1) {
+			session.setAttribute("userid", m.getUserid());
+			request.setAttribute("message", "회원가입에 성공했습니다.");
+		}else {
+			request.setAttribute("message", "회원가입에 실패했습니다.");
+		}
+		RequestDispatcher dis = request.getRequestDispatcher("login.do");
+		dis.forward(request,response);
 	}
 
 }

@@ -128,4 +128,32 @@ public class MemberDao {
 		}
 		return result;
 	}
+	//회원가입을 실행할 메서드
+	public int insertMember(Member m) {
+		int result=-1;
+		String sql="insert into member(name, userid, pwd, email, phone, admin) values (?,?,?,?,?,?)";
+		Connection conn=null;
+		PreparedStatement pstmt=null;
+		try {
+			conn=getConnection();
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, m.getName());
+			pstmt.setString(2,  m.getUserid());
+			pstmt.setString(3, m.getPwd());
+			pstmt.setString(4,  m.getEmail());
+			pstmt.setString(5, m.getPhone());
+			pstmt.setString(6,  m.getAdmin());
+			result=pstmt.executeUpdate();//변경된 row수가 return값이므로 insert문은 항상 1을 반환
+		}catch(Exception e) {
+			System.out.println("MemberDao.insertMember() 샐행 중 오류 발생 : "+e);
+		}finally {
+			try {
+				if(pstmt!=null)pstmt.close();
+				if(conn!=null)conn.close();
+			}catch(Exception ex) {
+				System.out.println("MemberDao.insertMember() 종료 중 오류 발생 : "+ex);
+			}
+		}
+		return result;
+	}
 }

@@ -8,7 +8,7 @@
 	</head>
 	<body>
 		<h1>안녕하세요. ${loginUser.name }, ${loginUser.userid }님</h1>
-		<a href="logout.jsp">로그아웃</a>
+		<a href="logout.do">로그아웃</a>
 		<a href="memberUpdate.do?userid=${loginUser.userid }">회원정보 수정</a>
 	</body>
 </html>
