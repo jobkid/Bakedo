@@ -5,7 +5,7 @@ import beans.Member;
 public class MemberDao {
 	private MemberDao(){
 		
-	}//다른 곳에서 생성자를 쓰지 못하게 막는다.
+	}//다른 곳에서 생성자를 쓰지 못하게 막는다.//싱글톤을 유지하기 위함.
 	private static MemberDao instance = new MemberDao();
 	//생성자는 하나 밖에 만들지 못한다. 그래도 생성자를 써야하기 때문에 static으로 잡는다.
 	
@@ -154,6 +154,35 @@ public class MemberDao {
 				System.out.println("MemberDao.insertMember() 종료 중 오류 발생 : "+ex);
 			}
 		}
+		return result;
+	}
+	
+	//회원정보 변경 기능
+	public int updateMember(Member m) {
+		int result=-1;
+		String sql="update member set pwd=?, email=?, phone=?, admin=? where userid=?";
+		Connection conn=null;
+		PreparedStatement pstmt=null;
+		
+		try {
+			conn=getConnection();
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, m.getPwd());
+			pstmt.setString(2, m.getEmail());
+			pstmt.setString(3, m.getPhone());
+			pstmt.setString(4, m.getAdmin());
+			pstmt.setString(5, m.getUserid());
+			result=pstmt.executeUpdate();
+		}catch(Exception e) {
+			System.out.println("Dao.updateMember() 수행 중 접속 오류 발생 : "+e);
+		}finally {
+			try {
+				if(pstmt!=null)pstmt.close();
+				if(conn!=null)conn.close();
+			}catch(Exception ex) {
+				System.out.println("Dao.updateMember() 수행 중 접속 종료 오류 발생 : "+ex);
+			}
+		}	
 		return result;
 	}
 }
